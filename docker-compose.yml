@@ -1,0 +1,7 @@
+services:
+  status_checker:
+    container_name: status_checker
+    build:
+      context: ./
+      dockerfile: ./status_checker/Dockerfile
+    env_file: .env
