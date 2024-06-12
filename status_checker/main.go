@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,6 +14,12 @@ func main() {
 	linksStr = strings.TrimSpace(linksStr)
 	links := strings.Split(linksStr, ",")
 
+	sleep, err := strconv.Atoi(os.Getenv("STATUS_CHECKER_INTERVAL"))
+	if err != nil {
+		fmt.Println("ERROR LOADING INTERVAL")
+		return
+	}
+
 	c := make(chan string)
 
 	for _, link := range links {
@@ -20,7 +27,7 @@ func main() {
 	}
 	for l := range c {
 		go func(l string) {
-			time.Sleep(5 * time.Second)
+			time.Sleep(time.Duration(sleep) * time.Second)
 			getWebsite(l, c)
 		}(l)
 	}
